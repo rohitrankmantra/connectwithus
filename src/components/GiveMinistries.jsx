@@ -14,6 +14,8 @@ import tapon from "../assets/images/tapon.png";
 import kirkwood from "../assets/images/kirkwood.png";
 import aagba from "../assets/images/aagba.png";
 import reach from "../assets/images/reach-logo.png";
+import dreams  from "../assets/images/dreams-and-visions.jpg";
+import unlimitedCareers from "../assets/images/unlimited-careers.jpg";
 
 const ministries = [
   { img: nfocc },
@@ -22,6 +24,10 @@ const ministries = [
   { img: kirkwood },
   { img: aagba },
   { img: reach },
+  { img: dreams },
+  { img: unlimitedCareers },
+
+
 ];
 
 const GiveMinistries = () => {
