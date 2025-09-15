@@ -32,6 +32,8 @@ import AdminPanel from "./pages/AdminPanel";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Donation from "./pages/Donation";
 import Give from "./pages/Give";
+import DonationSuccess from "./pages/DonationSuccess";
+import DonationCancel from "./pages/DonationCancel";
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
             {/* Public Frontend Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/give" element={<Give />} />
+            <Route path="/donation-success" element={<DonationSuccess />} />
+            <Route path="/donation-cancel" element={<DonationCancel />} />
             <Route path="/form-section" element={<FormsSection />} />
             <Route
               path="/minister-credential"
