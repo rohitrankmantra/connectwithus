@@ -88,7 +88,7 @@ function Home() {
                       {slide.description}
                     </p>
                     <a
-                      href="#"
+                      href="https://connectwithus.vercel.app/give"
                       className="inline-flex items-center text-white text-md md:text-lg font-medium hover:text-yellow-400 transition-colors duration-300 group rounded-full"
                     >
                       <span className="mr-3">Discover More</span>
