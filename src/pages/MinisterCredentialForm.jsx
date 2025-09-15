@@ -36,7 +36,7 @@ const MinisterCredentialForm = () => {
 
     try {
       const response = await axios.post(
-        "https://connectbackend-sol8.onrender.com/api/v1/minister-credential",
+        "https://connectbackend-vrny.onrender.com/api/v1/minister-credential",
         values
       );
 

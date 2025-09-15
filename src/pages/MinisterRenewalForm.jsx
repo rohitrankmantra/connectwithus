@@ -34,7 +34,7 @@ const MinisterRenewalForm = () => {
 
     try {
       const response = await axios.post(
-        "https://connectbackend-sol8.onrender.com/api/v1/minister-renewal",
+        "https://connectbackend-vrny.onrender.com/api/v1/minister-renewal",
         values
       );
 

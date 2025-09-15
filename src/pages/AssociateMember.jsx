@@ -33,7 +33,7 @@ const AssociateMember = () => {
 
     try {
       const response = await axios.post(
-        "https://connectbackend-sol8.onrender.com/api/v1/associate-member",
+        "https://connectbackend-vrny.onrender.com/api/v1/associate-member",
         values
       );
 

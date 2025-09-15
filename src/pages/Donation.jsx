@@ -18,7 +18,7 @@ const MessageBox = ({ message, type, onClose }) => {
     );
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div id="donation" className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div
         className={`relative p-6 rounded-lg shadow-lg max-w-sm w-full border ${bgColor} flex items-center justify-between`}
       >
@@ -93,7 +93,7 @@ const Donation = () => {
 
     try {
       const res = await axios.post(
-        "https://connectbackend-sol8.onrender.com/api/v1/donate/get-donation-token",
+        "https://connectbackend-vrny.onrender.com/api/v1/donate/get-donation-token",
         { amount }
       );
       if (res.data.success) {
@@ -147,7 +147,7 @@ const Donation = () => {
                 "success"
               );
               setRenderPayPalButton(false);
-              axios.post("https://connectbackend-sol8.onrender.com/api/v1/donate/send-thankyou", {
+              axios.post("https://connectbackend-vrny.onrender.com/api/v1/donate/send-thankyou", {
                 name,
                 email,
                 phone,

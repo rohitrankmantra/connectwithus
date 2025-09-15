@@ -44,7 +44,7 @@ function GiveHero() {
         </motion.p>
 
         <motion.a
-          href="#donation-form"
+          href="/donate"
           className="inline-block mt-6 px-10 py-4 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-full shadow-xl transition-transform duration-300 hover:scale-105 hover:shadow-yellow-400/50"
           whileHover={{ y: -2 }}
         >

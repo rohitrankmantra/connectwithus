@@ -73,7 +73,7 @@ const MinistryRequestForm = () => {
       cleanedValues.formType = "ministry-request";
 
       const response = await axios.post(
-        "https://connectbackend-sol8.onrender.com/api/v1/meeting-or-personal-ministry-request",
+        "https://connectbackend-vrny.onrender.com/api/v1/meeting-or-personal-ministry-request",
         cleanedValues,
         {
           headers: {
