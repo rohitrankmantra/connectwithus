@@ -1,7 +1,7 @@
 // src/components/GiveHero.jsx
 import React from "react";
 import { motion } from "framer-motion";
-import img1 from "../assets/images/hero1.jpg";
+import img1 from "../assets/images/slider2.jpg";
 
 function GiveHero() {
   return (
@@ -10,7 +10,7 @@ function GiveHero() {
       <img
         src={img1}
         alt="Donation background"
-        className="absolute inset-0 w-full h-full object-cover scale-105 animate-pulse-slow"
+        className="absolute inset-0 w-full h-full object-cover  animate-pulse-slow"
       />
 
       {/* Overlay */}
