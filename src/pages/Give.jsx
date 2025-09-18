@@ -1,4 +1,3 @@
-import React from 'react'
 import GiveHero from '../components/GiveHero'
 import GiveMinistries from '../components/GiveMinistries'
 import Donation from './Donation';

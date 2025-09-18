@@ -6,6 +6,7 @@ import img1 from "../assets/images/bg2.jpg";
 import img2 from "../assets/images/bg3.jpg";
 import FellowshipMinistries from "../components/FellowshipMinistries";
 import GoogleCalendar from "../components/GoogleCalendar";
+import { Link } from "react-router-dom";
 
 function Home() {
   const slides = [
@@ -87,8 +88,8 @@ function Home() {
                     <p className="text-base md:text-lg opacity-90 mb-6 md:mb-8 max-w-2xl rounded-md">
                       {slide.description}
                     </p>
-                    <a
-                      href="https://connectwithus.vercel.app/give"
+                    <Link
+                    to={"/give"}
                       className="inline-flex items-center text-white text-md md:text-lg font-medium hover:text-yellow-400 transition-colors duration-300 group rounded-full"
                     >
                       <span className="mr-3">Discover More</span>
@@ -106,7 +107,7 @@ function Home() {
                           d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
                         />
                       </svg>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </SwiperSlide>

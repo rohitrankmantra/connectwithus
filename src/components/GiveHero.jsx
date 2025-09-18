@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import img1 from "../assets/images/slider2.jpg";
+import { Link } from 'react-router-dom';
 
 function GiveHero() {
   return (
@@ -43,13 +44,13 @@ function GiveHero() {
           <span className="text-yellow-300">Every gift matters.</span>
         </motion.p>
 
-        <motion.a
-          href="/donate"
+        <Link
+          to={"/donate"}
           className="inline-block mt-6 px-10 py-4 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-full shadow-xl transition-transform duration-300 hover:scale-105 hover:shadow-yellow-400/50"
           whileHover={{ y: -2 }}
         >
           Make a Donation
-        </motion.a>
+        </Link>
       </motion.div>
 
       {/* Slow Zoom Animation */}

@@ -97,7 +97,7 @@ const Donation = () => {
 
   try {
     const res = await axios.post(
-      "http://localhost:5000/api/v1/donate/get-donation-token",
+      "https://connectbackend-vrny.onrender.com/api/v1/donate/get-donation-token",
       { amount }
     );
 
