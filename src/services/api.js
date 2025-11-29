@@ -1,10 +1,9 @@
 import axios from "axios";
 
 // Create axios instance with base configuration
-const apiUrl = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
-  baseURL: apiUrl,
+  baseURL: import.meta.env.VITE_API_URL, // <--- yaha env use karo
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

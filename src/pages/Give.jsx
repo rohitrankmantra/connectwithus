@@ -1,6 +1,6 @@
 import GiveHero from '../components/GiveHero'
 import GiveMinistries from '../components/GiveMinistries'
-import Donation from './Donation';
+import Donation from './Donation.jsx';
 
 const Give = () => {
   return (

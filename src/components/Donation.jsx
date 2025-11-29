@@ -43,7 +43,7 @@ const MessageBox = ({ message, type, onClose }) => {
 const Donation = () => {
   const [amount, setAmount] = useState("");
   const [token, setToken] = useState("");
-  const [paymentUrl, setPaymentUrl] = useState(""); // ✅ Added state
+  const [paymentUrl, setPaymentUrl] = useState("");
   const paypalRef = useRef();
   const [renderPayPalButton, setRenderPayPalButton] = useState(false);
   const [showAuthorizeNetIframe, setShowAuthorizeNetIframe] = useState(false);
@@ -85,49 +85,45 @@ const Donation = () => {
   };
 
   const handleAuthorizeNetSubmit = async (e) => {
-  e.preventDefault();
-  const donation = parseFloat(amount);
-  if (isNaN(donation) || donation <= 0) {
-    showMessage(
-      "Please enter a valid donation amount for Authorize.Net.",
-      "error"
-    );
-    return;
-  }
-
-  try {
-    const res = await axios.post(
-      "https://connectbackend-vrny.onrender.com/api/v1/donate/get-donation-token",
-      { amount }
-    );
-
-    if (res.data.success) {
-      setToken(res.data.token);
-      setPaymentUrl(res.data.paymentUrl); // ✅ Save backend-provided paymentUrl
-      setShowAuthorizeNetIframe(true);
-      setRenderPayPalButton(false);
-      showMessage("Loading Authorize.Net payment form...", "success");
-
-      // ✅ Save donor details locally
-      localStorage.setItem(
-        "donorDetails",
-        JSON.stringify({ name, email, phone, amount })
+    e.preventDefault();
+    const donation = parseFloat(amount);
+    if (isNaN(donation) || donation <= 0) {
+      showMessage(
+        "Please enter a valid donation amount for Authorize.Net.",
+        "error"
       );
-
-      // ✅ Trigger the hidden form submission once token/paymentUrl are set
-      setTimeout(() => {
-        const form = document.getElementById("authorizeNetForm");
-        if (form) form.submit();
-      }, 200); // small delay so React renders the form
-    } else {
-      showMessage("Error generating token for Authorize.Net.", "error");
+      return;
     }
-  } catch (error) {
-    console.error("Authorize.Net token error:", error);
-    showMessage("Server error. Please try again later.", "error");
-  }
-};
 
+    try {
+    const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/donate/get-donation-token`,
+  { amount }
+);
+      if (res.data.success) {
+        setToken(res.data.token);
+        setPaymentUrl(res.data.paymentUrl);
+        setShowAuthorizeNetIframe(true);
+        setRenderPayPalButton(false);
+        showMessage("Loading Authorize.Net payment form...", "success");
+
+        localStorage.setItem(
+          "donorDetails",
+          JSON.stringify({ name, email, phone, amount })
+        );
+
+        setTimeout(() => {
+          const form = document.getElementById("authorizeNetForm");
+          if (form) form.submit();
+        }, 200);
+      } else {
+        showMessage("Error generating token for Authorize.Net.", "error");
+      }
+    } catch (error) {
+      console.error("Authorize.Net token error:", error);
+      showMessage("Server error. Please try again later.", "error");
+    }
+  };
 
   useEffect(() => {
     if (renderPayPalButton && window.paypal && paypalRef.current) {
@@ -146,32 +142,34 @@ const Donation = () => {
             return actions.order.create({
               purchase_units: [
                 {
-                  amount: {
-                    value: amount,
-                  },
+                  amount: { value: amount },
                 },
               ],
             });
           },
-          onApprove: (data, actions) => {
-            return actions.order.capture().then((details) => {
-              showMessage(
-                `Thank you, ${details.payer.name.given_name}, for your generous donation of $${amount}!`,
-                "success"
-              );
-              setRenderPayPalButton(false);
-              axios.post(
-                "https://connectbackend-vrny.onrender.com/api/v1/donate/send-thankyou",
-                {
-                  name,
-                  email,
-                  phone,
-                  amount,
-                }
-              );
-              setAmount("");
-            });
-          },
+       onApprove: async (data, actions) => {
+  return actions.order.capture().then(async (details) => {
+    const capture = details.purchase_units[0].payments.captures[0];
+    console.log("PayPal Capture Details:", capture);
+
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/donate/paypal`, {
+          name: name,
+          email: email,
+          phone: phone,
+          amount: amount,
+          transactionId: capture.id,
+          method: "PayPal",
+        }
+      );
+
+      showMessage("Donation completed successfully!", "success");
+    } catch (error) {
+      console.error("Email API Error:", error);
+      showMessage("Payment done but email sending failed!", "error");
+    }
+  });
+},
           onError: (err) => {
             console.error("PayPal Checkout Error:", err);
             showMessage(
@@ -208,10 +206,7 @@ const Donation = () => {
           </h2>
 
           <div className="mb-6">
-            <label
-              htmlFor="donation-amount"
-              className="block text-gray-600 text-lg font-medium mb-2"
-            >
+            <label htmlFor="donation-amount" className="block text-gray-600 text-lg font-medium mb-2">
               Enter Donation Amount ($USD)
             </label>
             <input
@@ -226,10 +221,9 @@ const Donation = () => {
               required
             />
           </div>
+
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
-              Full Name
-            </label>
+            <label className="block text-gray-700 font-medium mb-2">Full Name</label>
             <input
               type="text"
               value={name}
@@ -253,9 +247,7 @@ const Donation = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
-              Phone Number
-            </label>
+            <label className="block text-gray-700 font-medium mb-2">Phone Number</label>
             <input
               type="tel"
               value={phone}
@@ -295,52 +287,46 @@ const Donation = () => {
             </form>
           </div>
 
- {showAuthorizeNetIframe && token && paymentUrl && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-    <div className=" max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden relative">
-      {/* Close Button */}
-      <button
-        onClick={() => setShowAuthorizeNetIframe(false)}
-        className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
-      >
-        ✕
-      </button>
+          {showAuthorizeNetIframe && token && paymentUrl && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+              <div className=" max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden relative">
+                <button
+                  onClick={() => setShowAuthorizeNetIframe(false)}
+                  className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl font-bold"
+                >
+                  ✕
+                </button>
 
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[#001053] to-[#761c14] text-white py-5 px-8">
-        <h2 className="text-xl font-semibold">Secure Payment</h2>
-        <p className="text-sm opacity-90">Complete your donation using Authorize.Net</p>
-      </div>
+                <div className="bg-gradient-to-r from-[#001053] to-[#761c14] text-white py-5 px-8">
+                  <h2 className="text-xl font-semibold">Secure Payment</h2>
+                  <p className="text-sm opacity-90">Complete your donation using Authorize.Net</p>
+                </div>
 
-      {/* Iframe + hidden form */}
-      <div className="p-6">
-        <form
-          id="authorizeNetForm"
-          method="post"
-          action={paymentUrl}
-          target="authorizeNetIFrame"
-        >
-          <input type="hidden" name="token" value={token} />
-        </form>
-        <iframe
-          name="authorizeNetIFrame"
-          width="100%"
-          height="700px"
-          frameBorder="0"
-          scrolling="auto"
-          className="rounded-lg border border-gray-300"
-        ></iframe>
-      </div>
+                <div className="p-6">
+                  <form
+                    id="authorizeNetForm"
+                    method="post"
+                    action={paymentUrl}
+                    target="authorizeNetIFrame"
+                  >
+                    <input type="hidden" name="token" value={token} />
+                  </form>
+                  <iframe
+                    name="authorizeNetIFrame"
+                    width="100%"
+                    height="700px"
+                    frameBorder="0"
+                    scrolling="auto"
+                    className="rounded-lg border border-gray-300"
+                  ></iframe>
+                </div>
 
-      {/* Footer */}
-      <div className="bg-gray-100 py-4 px-6 text-center text-xs text-gray-600">
-        🔒 Payments are encrypted and securely processed by <b>Authorize.Net</b>.
-      </div>
-    </div>
-  </div>
-)}
-
-
+                <div className="bg-gray-100 py-4 px-6 text-center text-xs text-gray-600">
+                  🔒 Payments are encrypted and securely processed by <b>Authorize.Net</b>.
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <footer className="text-white text-center mt-10 text-sm sm:text-base">
@@ -349,11 +335,7 @@ const Donation = () => {
         </footer>
       </div>
 
-      <MessageBox
-        message={message}
-        type={messageType}
-        onClose={closeMessageBox}
-      />
+      <MessageBox message={message} type={messageType} onClose={closeMessageBox} />
     </div>
   );
 };
